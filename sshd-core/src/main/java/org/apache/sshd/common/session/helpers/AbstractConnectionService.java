@@ -459,12 +459,15 @@ public abstract class AbstractConnectionService
                 channelOpenFailure(buffer);
                 break;
             case SshConstants.SSH_MSG_CHANNEL_REQUEST:
+                // TODO 处理添加环境变量/sh/exec等指令请求
                 channelRequest(buffer);
                 break;
             case SshConstants.SSH_MSG_CHANNEL_DATA:
+                // TODO 处理其他指令
                 channelData(buffer);
                 break;
             case SshConstants.SSH_MSG_CHANNEL_EXTENDED_DATA:
+                // TODO 处理扩展指令
                 channelExtendedData(buffer);
                 break;
             case SshConstants.SSH_MSG_CHANNEL_FAILURE:
@@ -656,6 +659,7 @@ public abstract class AbstractConnectionService
             return; // debug breakpoint
         }
 
+        // TODO 处理请求AbstractChannel.handleRequest
         channel.handleRequest(buffer);
     }
 

@@ -56,6 +56,7 @@ public class Nio2ServiceFactory extends AbstractIoServiceFactory {
 
     @Override
     public IoAcceptor createAcceptor(IoHandler handler) {
+        // TODO 创建处理请求的Nio2Acceptor
         return autowireCreatedService(new Nio2Acceptor(getFactoryManager(), handler, group));
     }
 

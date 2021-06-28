@@ -1,0 +1,8 @@
+### Apache mina-sshd Server启动流程
+- 整体流程： SshServer#start -> createAcceptor -> ioFactory.createAcceptor(MinaServiceFactory/NettyIoServiceFactory/Nio2ServiceFactory) -> ...  -> acceptor.bind(new InetSocketAddress(inetAddress, port))
+	- Nio2Acceptor流程：Nio2ServiceFactory.createAcceptor -> new Nio2Acceptor -> ... -> Nio2Acceptor.bind -> handler = Nio2Acceptor#createSocketCompletionHandler -> new AcceptCompletionHandler -> socket.accept(local, handler) -> Nio2Acceptor.AcceptCompletionHandler#onCompleted等待请求数据包接收完成... -> Nio2Session#startReading() -> 一系列startReading重载方法 -> Nio2Session#doReadCycle -> completion = createReadCycleCompletionHandler & doReadCycle -> AsynchronousSocketChannelImpl#read(ByteBuffer, long, TimeUnit, A, CompletionHandler<java.lang.Integer,? super A>) -> ... -> Nio2CompletionHandler#onCompleted -> AbstractSessionIoHandler.messageReceived -> AbstractSession#messageReceived -> AbstractSession#decode -> AbstractSession.handleMessage -> AbstractSession#doHandleMessage -> AbstractConnectionService.process -> ...
+		- AbstractConnectionService#channelRequest：处理环境变量添加等指令 -> AbstractChannel.handleRequest -> AbstractChannel#handleChannelRequest -> (handler.process: 暂未分析是处理啥请求的 ->   || AbstractChannel#handleUnknownChannelRequest: 处理环境变量添加等指令 -> ChannelSession#handleInternalRequest -> ChannelSession#handleEnv -> ChannelSession#addEnvVariable:至此session级别的env设置完成)
+		- AbstractConnectionService.channelData：处理ssh客户端的其他指令 -> AbstractChannel#handleData -> ChannelSession#doWriteData -> receiver.data（ChannelDataReceiver.data)
+		- channelExtendedData：处理扩展指令 -> ...
+
+	

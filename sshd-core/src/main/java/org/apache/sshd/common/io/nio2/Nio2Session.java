@@ -181,6 +181,7 @@ public class Nio2Session extends AbstractCloseable implements IoSession {
             return future;
         }
         writes.add(future);
+        // TODO 开始写数据
         startWriting();
         return future;
     }
@@ -302,6 +303,7 @@ public class Nio2Session extends AbstractCloseable implements IoSession {
     }
 
     public void startReading() {
+        // TODO 开始读取数据包，并处理请求
         startReading(CoreModuleProperties.NIO2_READ_BUFFER_SIZE.getRequired(propertyResolver));
     }
 
@@ -322,9 +324,11 @@ public class Nio2Session extends AbstractCloseable implements IoSession {
     }
 
     protected void doReadCycle(ByteBuffer buffer, Readable bufReader) {
+        // TODO 创建请求读取完成的处理器
         Nio2CompletionHandler<Integer, Object> completion = Objects.requireNonNull(
                 createReadCycleCompletionHandler(buffer, bufReader),
                 "No completion handler created");
+        // TODO 循环读取
         doReadCycle(buffer, completion);
     }
 
@@ -333,6 +337,7 @@ public class Nio2Session extends AbstractCloseable implements IoSession {
         return new Nio2CompletionHandler<Integer, Object>() {
             @Override
             protected void onCompleted(Integer result, Object attachment) {
+                // TODO 处理请求
                 handleReadCycleCompletion(buffer, bufReader, this, result, attachment);
             }
 
@@ -356,6 +361,7 @@ public class Nio2Session extends AbstractCloseable implements IoSession {
                 buffer.flip();
 
                 IoHandler handler = getIoHandler();
+                // TODO 处理请求 AbstractSessionIoHandler.messageReceived
                 handler.messageReceived(this, bufReader);
                 if (!closeFuture.isClosed()) {
                     // re-use reference for next iteration since we finished processing it

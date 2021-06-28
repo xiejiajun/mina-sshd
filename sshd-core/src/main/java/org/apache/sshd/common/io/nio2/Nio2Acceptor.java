@@ -93,10 +93,12 @@ public class Nio2Acceptor extends Nio2Service implements IoAcceptor {
                         }
                     }
 
+                    // TODO createSocketCompletionHandler创建处理请求的Handler
                     CompletionHandler<AsynchronousSocketChannel, ? super SocketAddress> handler
                             = ValidateUtils.checkNotNull(createSocketCompletionHandler(channels, socket),
                                     "No completion handler created for address=%s[%s]",
                                     address, local);
+                    // TODO 将请求处理handler设置给异步IO socket
                     socket.accept(local, handler);
                 } catch (IOException | RuntimeException e) {
                     error("bind({}) - failed ({}) to bind: {}",
@@ -163,6 +165,7 @@ public class Nio2Acceptor extends Nio2Service implements IoAcceptor {
     protected CompletionHandler<AsynchronousSocketChannel, ? super SocketAddress> createSocketCompletionHandler(
             Map<SocketAddress, AsynchronousServerSocketChannel> channelsMap, AsynchronousServerSocketChannel socket)
             throws IOException {
+        // TODO 创建请求处理handler
         return new AcceptCompletionHandler(socket);
     }
 
@@ -300,6 +303,7 @@ public class Nio2Acceptor extends Nio2Service implements IoAcceptor {
                         unmapSession(sessionId);
                     }
                 } else {
+                    // TODO 当前会话开始读取数据
                     session.startReading();
                 }
 

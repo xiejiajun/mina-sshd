@@ -259,6 +259,7 @@ public abstract class AbstractChannel extends AbstractInnerCloseable implements 
 
     @Override
     public void handleRequest(Buffer buffer) throws IOException {
+        // TODO  处理请求
         handleChannelRequest(buffer.getString(), buffer.getBoolean(), buffer);
     }
 
@@ -273,6 +274,7 @@ public abstract class AbstractChannel extends AbstractInnerCloseable implements 
         for (RequestHandler<Channel> handler : handlers) {
             RequestHandler.Result result;
             try {
+                // TODO 常规指令处理
                 result = handler.process(this, req, wantReply, buffer);
             } catch (Throwable e) {
                 debug("handleRequest({}) {} while {}#process({})[want-reply={}]: {}", this,
@@ -294,6 +296,7 @@ public abstract class AbstractChannel extends AbstractInnerCloseable implements 
         }
 
         // none of the handlers processed the request
+        // TODO 添加环境变量等请求处理
         handleUnknownChannelRequest(req, wantReply, buffer);
     }
 

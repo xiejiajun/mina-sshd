@@ -236,6 +236,7 @@ public class ChannelSession extends AbstractServerChannel {
 
         int reqLen = (int) len;
         if (receiver != null) {
+            // TODO 将数据传递给用户业务逻辑处理
             int r = receiver.data(this, data, off, reqLen);
             if (r > 0) {
                 Window wLocal = getLocalWindow();
@@ -285,16 +286,20 @@ public class ChannelSession extends AbstractServerChannel {
             throws IOException {
         switch (requestType) {
             case "env":
+                // TODO 处理环境变量添加指令
                 return handleEnv(buffer, wantReply);
             case "pty-req":
                 return handlePtyReq(buffer, wantReply);
             case "window-change":
+                // TODO 处理窗口大小调整指令
                 return handleWindowChange(buffer, wantReply);
             case "signal":
+                // TODO 处理信号
                 return handleSignal(buffer, wantReply);
             case "break":
                 return handleBreak(buffer, wantReply);
             case Channel.CHANNEL_SHELL:
+                // TODO 执行sh/bash指令？
                 if (this.type == null) {
                     RequestHandler.Result r = handleShell(requestType, buffer, wantReply);
                     if (RequestHandler.Result.ReplySuccess.equals(r)
@@ -310,6 +315,7 @@ public class ChannelSession extends AbstractServerChannel {
                     return RequestHandler.Result.ReplyFailure;
                 }
             case Channel.CHANNEL_EXEC:
+                // TODO 执行exec指令
                 if (this.type == null) {
                     RequestHandler.Result r = handleExec(requestType, buffer, wantReply);
                     if (RequestHandler.Result.ReplySuccess.equals(r)
@@ -474,6 +480,7 @@ public class ChannelSession extends AbstractServerChannel {
             int tColumns, int tRows, int tWidth, int tHeight)
             throws IOException {
         StandardEnvironment e = getEnvironment();
+        // TODO 设置窗口大小环境变量
         e.set(Environment.ENV_COLUMNS, Integer.toString(tColumns));
         e.set(Environment.ENV_LINES, Integer.toString(tRows));
         e.signal(this, Signal.WINCH);

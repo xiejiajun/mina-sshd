@@ -426,6 +426,7 @@ public abstract class AbstractSession extends SessionHelper {
     protected void handleMessage(Buffer buffer) throws Exception {
         try {
             synchronized (sessionLock) {
+                // TODO 处理数据包
                 doHandleMessage(buffer);
             }
         } catch (Throwable e) {
@@ -500,6 +501,7 @@ public abstract class AbstractSession extends SessionHelper {
 
                     handleKexMessage(cmd, buffer);
                 } else if (currentService != null) {
+                    // TODO 处理命令： AbstractConnectionService.process
                     currentService.process(cmd, buffer);
                     resetIdleTimeout();
                 } else {
@@ -885,6 +887,7 @@ public abstract class AbstractSession extends SessionHelper {
         }
 
         try {
+            // TODO 处理数据包
             return doWritePacket(buffer);
         } finally {
             resetIdleTimeout();
@@ -1463,6 +1466,7 @@ public abstract class AbstractSession extends SessionHelper {
                     inBytesCount.addAndGet(packet.available());
 
                     // Process decoded packet
+                    // TODO 处理解码好的数据包：AbstractSession.handleMessage
                     handleMessage(packet);
 
                     // Set ready to handle next packet

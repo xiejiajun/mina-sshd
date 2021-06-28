@@ -310,6 +310,7 @@ public class SshServer extends AbstractFactoryManager implements ServerFactoryMa
         if (sessionFactory == null) {
             sessionFactory = createSessionFactory();
         }
+        // TODO 创建处理客户端请求的Acceptor
         acceptor = createAcceptor();
 
         setupSessionTimeout(sessionFactory);
@@ -418,6 +419,7 @@ public class SshServer extends AbstractFactoryManager implements ServerFactoryMa
     protected IoAcceptor createAcceptor() {
         IoServiceFactory ioFactory = getIoServiceFactory();
         SessionFactory sessFactory = getSessionFactory();
+        // TODO MinaServiceFactory/NettyIoServiceFactory/Nio2ServiceFactory
         return ioFactory.createAcceptor(sessFactory);
     }
 
