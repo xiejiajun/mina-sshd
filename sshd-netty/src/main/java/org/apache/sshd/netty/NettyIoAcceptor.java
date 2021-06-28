@@ -88,6 +88,7 @@ public class NettyIoAcceptor extends NettyIoService implements IoAcceptor {
                             ChannelPipeline p = ch.pipeline();
                             @SuppressWarnings("resource")
                             NettyIoSession nettyIoSession = new NettyIoSession(NettyIoAcceptor.this, handler, service);
+                            // TODO 设置Netty数据请求处理Handler
                             p.addLast(nettyIoSession.adapter);
                         } catch (Exception e) {
                             if (listener != null) {

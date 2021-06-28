@@ -9,3 +9,9 @@
     		- AbstractConnectionService#channelRequest：处理环境变量添加等指令 -> AbstractChannel.handleRequest -> AbstractChannel#handleChannelRequest -> (handler.process: 暂未分析是处理啥请求的 ->   || AbstractChannel#handleUnknownChannelRequest: 处理环境变量添加等指令 -> ChannelSession#handleInternalRequest -> ChannelSession#handleEnv -> ChannelSession#addEnvVariable:至此session级别的env设置完成)
     		- AbstractConnectionService.channelData：处理ssh客户端的其他指令 -> AbstractChannel#handleData -> ChannelSession#doWriteData -> receiver.data（ChannelDataReceiver.data)
     		- channelExtendedData：处理扩展指令 -> ...
+    	
+    - NettyIoAcceptor流程：NettyIoServiceFactory.createAcceptor -> new NettyIoAcceptor -> p.addLast(nettyIoSession.adapter): ChannelPipeline.addLast -> ... -> NettyIoAcceptor.bind -> ... -> NettyIoSession.Adapter#channelRead -> NettyIoSession#channelRead -> AbstractSessionIoHandler.messageReceived -> AbstractSession#messageReceived -> AbstractSession#decode -> AbstractSession.handleMessage -> AbstractSession#doHandleMessage -> AbstractConnectionService.process -> ...
+    		- AbstractConnectionService#channelRequest：处理环境变量添加等指令 -> AbstractChannel.handleRequest -> AbstractChannel#handleChannelRequest -> (handler.process: 暂未分析是处理啥请求的 ->   || AbstractChannel#handleUnknownChannelRequest: 处理环境变量添加等指令 -> ChannelSession#handleInternalRequest -> ChannelSession#handleEnv -> ChannelSession#addEnvVariable:至此session级别的env设置完成)
+    		- AbstractConnectionService.channelData：处理ssh客户端的其他指令 -> AbstractChannel#handleData -> ChannelSession#doWriteData -> receiver.data（ChannelDataReceiver.data)
+    		- channelExtendedData：处理扩展指令 -> ...
+    

@@ -25,8 +25,18 @@ import org.apache.sshd.common.Closeable;
  */
 public interface IoServiceFactory extends Closeable, IoServiceEventListenerManager {
 
+    /**
+     * 用于创建ssh客户端的连接器
+     * @param handler
+     * @return
+     */
     IoConnector createConnector(IoHandler handler);
 
+    /**
+     * 用于创建ssh服务端的acceptor
+     * @param handler
+     * @return
+     */
     IoAcceptor createAcceptor(IoHandler handler);
 
 }
