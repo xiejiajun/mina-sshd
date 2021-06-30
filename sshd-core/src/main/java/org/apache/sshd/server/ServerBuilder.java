@@ -74,6 +74,7 @@ public class ServerBuilder extends BaseBuilder<SshServer, ServerBuilder> {
                     CancelTcpipForwardHandler.INSTANCE,
                     OpenSshHostKeysHandler.INSTANCE));
 
+    // TODO 使用默认user_home/.ssh/authorized_keys公钥文件的PubKey认证器
     public static final PublickeyAuthenticator DEFAULT_PUBLIC_KEY_AUTHENTICATOR = DefaultAuthorizedKeysAuthenticator.INSTANCE;
     public static final KeyboardInteractiveAuthenticator DEFAULT_INTERACTIVE_AUTHENTICATOR
             = DefaultKeyboardInteractiveAuthenticator.INSTANCE;

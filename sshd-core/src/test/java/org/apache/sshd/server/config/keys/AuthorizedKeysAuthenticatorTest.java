@@ -58,6 +58,7 @@ public class AuthorizedKeysAuthenticatorTest extends AuthorizedKeysTestSupport {
             Files.delete(file);
         }
 
+        // TODO AuthorizedKeysAuthenticator认证单测
         AtomicInteger reloadCount = new AtomicInteger(0);
         PublickeyAuthenticator auth = new AuthorizedKeysAuthenticator(file) {
             @Override

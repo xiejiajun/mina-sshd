@@ -440,6 +440,8 @@ public class SshServer extends AbstractFactoryManager implements ServerFactoryMa
      * @return a newly create {@link SshServer} with default configurations
      */
     public static SshServer setUpDefaultServer() {
+        // TODO 默认使用的是DefaultAuthorizedKeysAuthenticator：自动读取用户home目录/.ssh/authorized_keys下的pubKey列表
+        //  来进行基于pubKey认证支持
         ServerBuilder builder = ServerBuilder.builder();
         return builder.build();
     }

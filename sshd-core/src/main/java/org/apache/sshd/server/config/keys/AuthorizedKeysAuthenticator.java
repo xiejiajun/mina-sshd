@@ -67,6 +67,7 @@ public class AuthorizedKeysAuthenticator extends ModifiableFileWatcher implement
             new AtomicReference<>(RejectAllPublickeyAuthenticator.INSTANCE);
 
     public AuthorizedKeysAuthenticator(Path file) {
+        // TODO file为自己定义的authorized_keys文件路径
         this(file, IoUtils.getLinkOptions(false));
     }
 
@@ -117,8 +118,10 @@ public class AuthorizedKeysAuthenticator extends ModifiableFileWatcher implement
 
             Path path = getPath();
             if (exists()) {
+                // TODO 从指定文件(authorized_keys)读取pubKey列表
                 Collection<AuthorizedKeyEntry> entries = reloadAuthorizedKeys(path, username, session);
                 if (GenericUtils.size(entries) > 0) {
+                    // TODO AuthorizedKeyEntriesPublickeyAuthenticator / RejectAllPublickeyAuthenticator
                     PublickeyAuthenticator authDelegate = createDelegateAuthenticator(username, session, path, entries,
                             getFallbackPublicKeyEntryResolver());
                     delegateHolder.set(authDelegate);
@@ -135,6 +138,7 @@ public class AuthorizedKeysAuthenticator extends ModifiableFileWatcher implement
             String username, ServerSession session, Path path,
             Collection<AuthorizedKeyEntry> entries, PublicKeyEntryResolver fallbackResolver)
             throws IOException, GeneralSecurityException {
+        // TODO AuthorizedKeyEntriesPublickeyAuthenticator / RejectAllPublickeyAuthenticator
         return PublickeyAuthenticator.fromAuthorizedEntries(path, session, entries, fallbackResolver);
     }
 
@@ -145,6 +149,7 @@ public class AuthorizedKeysAuthenticator extends ModifiableFileWatcher implement
     protected Collection<AuthorizedKeyEntry> reloadAuthorizedKeys(
             Path path, String username, ServerSession session)
             throws IOException, GeneralSecurityException {
+        // TODO 从指定文件(authorized_keys)读取管理员配置的pubKey列表
         Collection<AuthorizedKeyEntry> entries = AuthorizedKeyEntry.readAuthorizedKeys(path);
         log.info("reloadAuthorizedKeys({})[{}] loaded {} keys from {}",
                 username, session, GenericUtils.size(entries), path);

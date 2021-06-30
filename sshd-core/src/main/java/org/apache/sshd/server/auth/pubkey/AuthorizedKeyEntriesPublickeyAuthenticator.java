@@ -88,6 +88,7 @@ public class AuthorizedKeyEntriesPublickeyAuthenticator extends AbstractLoggingB
         }
 
         for (Map.Entry<AuthorizedKeyEntry, PublicKey> e : resolvedKeys.entrySet()) {
+            // TODO 服务器上的pubKey列表挨个对比，有一个匹配即认证通过
             if (KeyUtils.compareKeys(key, e.getValue())) {
                 if (log.isDebugEnabled()) {
                     log.debug("authenticate(" + username + ")[" + session + "] match found");

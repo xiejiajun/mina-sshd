@@ -191,6 +191,7 @@ public class AuthorizedKeyEntry extends PublicKeyEntry {
      * @see                Files#newInputStream(Path, OpenOption...)
      */
     public static List<AuthorizedKeyEntry> readAuthorizedKeys(Path path, OpenOption... options) throws IOException {
+        // TODO 从指定文件(authorized_keys)读取pubKey列表
         try (InputStream in = Files.newInputStream(path, options)) {
             return readAuthorizedKeys(in, true);
         }
@@ -208,6 +209,7 @@ public class AuthorizedKeyEntry extends PublicKeyEntry {
     public static List<AuthorizedKeyEntry> readAuthorizedKeys(InputStream in, boolean okToClose) throws IOException {
         try (Reader rdr = new InputStreamReader(
                 NoCloseInputStream.resolveInputStream(in, okToClose), StandardCharsets.UTF_8)) {
+            // TODO 从文件流解析pubKey列表
             return readAuthorizedKeys(rdr, true);
         }
     }
@@ -223,6 +225,7 @@ public class AuthorizedKeyEntry extends PublicKeyEntry {
      */
     public static List<AuthorizedKeyEntry> readAuthorizedKeys(Reader rdr, boolean okToClose) throws IOException {
         try (BufferedReader buf = new BufferedReader(NoCloseReader.resolveReader(rdr, okToClose))) {
+            // TODO 从文件流解析pubKey列表
             return readAuthorizedKeys(buf);
         }
     }
@@ -238,6 +241,7 @@ public class AuthorizedKeyEntry extends PublicKeyEntry {
         for (String line = rdr.readLine(); line != null; line = rdr.readLine()) {
             AuthorizedKeyEntry entry;
             try {
+                // TODO 一行一个Pubkey，按行解析
                 entry = parseAuthorizedKeyEntry(line);
                 if (entry == null) {
                     continue; // null, empty or comment line
@@ -270,6 +274,7 @@ public class AuthorizedKeyEntry extends PublicKeyEntry {
      * @see                             #parseAuthorizedKeyEntry(String, PublicKeyEntryDataResolver)
      */
     public static AuthorizedKeyEntry parseAuthorizedKeyEntry(String value) throws IllegalArgumentException {
+        // TODO 从字符串解析PubKey对象
         return parseAuthorizedKeyEntry(value, null);
     }
 
@@ -284,6 +289,7 @@ public class AuthorizedKeyEntry extends PublicKeyEntry {
     public static AuthorizedKeyEntry parseAuthorizedKeyEntry(
             String value, PublicKeyEntryDataResolver resolver)
             throws IllegalArgumentException {
+        // TODO 空格处理
         String line = GenericUtils.replaceWhitespaceAndTrim(value);
         if (GenericUtils.isEmpty(line) || (line.charAt(0) == COMMENT_CHAR) /* comment ? */) {
             return null;
@@ -299,7 +305,9 @@ public class AuthorizedKeyEntry extends PublicKeyEntry {
             endPos = line.length();
         }
 
+        // TODO 切割出pubKey加密算法
         String keyType = line.substring(0, startPos);
+        // TODO 构建对应算法的解码器
         Object decoder = PublicKeyEntry.getKeyDataEntryResolver(keyType);
         if (decoder == null) {
             decoder = KeyUtils.getPublicKeyEntryDecoder(keyType);
@@ -308,13 +316,16 @@ public class AuthorizedKeyEntry extends PublicKeyEntry {
         AuthorizedKeyEntry entry;
         // assume this is due to the fact that it starts with login options
         if (decoder == null) {
+            // TODO 没有decoder时按行解析
             Map.Entry<String, String> comps = resolveEntryComponents(line);
+            // TODO 递归解析
             entry = parseAuthorizedKeyEntry(comps.getValue());
             ValidateUtils.checkTrue(entry != null, "Bad format (no key data after login options): %s", line);
             entry.setLoginOptions(parseLoginOptions(comps.getKey()));
         } else {
             String encData = (endPos < (line.length() - 1)) ? line.substring(0, endPos).trim() : line;
             String comment = (endPos < (line.length() - 1)) ? line.substring(endPos + 1).trim() : null;
+            // TODO 解码加密的PubKey
             entry = parsePublicKeyEntry(new AuthorizedKeyEntry(), encData, resolver);
             entry.setComment(comment);
         }

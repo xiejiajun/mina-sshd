@@ -65,6 +65,7 @@ public class KeySetPublickeyAuthenticator extends AbstractLoggingBean implements
             return false;
         }
 
+        // TODO 从服务器上的key列表查找是否有和key匹配的，有的话就通过
         PublicKey matchKey = KeyUtils.findMatchingKey(key, keys);
         boolean matchFound = matchKey != null;
         if (log.isDebugEnabled()) {

@@ -15,3 +15,9 @@
     		- AbstractConnectionService.channelData：处理ssh客户端的其他指令 -> AbstractChannel#handleData -> ChannelSession#doWriteData -> receiver.data（ChannelDataReceiver.data)
     		- channelExtendedData：处理扩展指令 -> ...
     
+---
+### sshd server基于PubKey的认证模式梳理：
+- 可以从DefaultAuthorizedKeysAuthenticator入手分析：
+    - 自动读取用户home目录/.ssh/authorized_keys下的pubKey列表来进行基于pubKey认证支持
+    - AuthorizedKeysAuthenticator.authenticate
+    - DefaultAuthorizedKeysAuthenticator.reloadAuthorizedKeys

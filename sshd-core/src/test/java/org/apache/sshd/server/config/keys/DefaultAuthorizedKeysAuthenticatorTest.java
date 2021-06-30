@@ -52,6 +52,7 @@ public class DefaultAuthorizedKeysAuthenticatorTest extends AuthorizedKeysTestSu
         Collection<AuthorizedKeyEntry> entries = AuthorizedKeyEntry.readAuthorizedKeys(file);
         Collection<PublicKey> keySet = PublicKeyEntry.resolvePublicKeyEntries(null, entries, PublicKeyEntryResolver.FAILING);
         PublickeyAuthenticator auth = new DefaultAuthorizedKeysAuthenticator(file, false);
+        // TODO DefaultAuthorizedKeysAuthenticator默认的使用user_home/.ssh/authorized_keys的认证单测
         String thisUser = OsUtils.getCurrentUser();
         ServerSession session = Mockito.mock(ServerSession.class);
         for (String username : new String[] { null, "", thisUser, getClass().getName() + "#" + getCurrentTestName() }) {
