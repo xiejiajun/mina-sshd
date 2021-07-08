@@ -32,7 +32,7 @@ public class JdbcAuthorizedKeysAuthenticator extends AuthorizedKeysAuthenticator
             Path path, String username, ServerSession session)
             throws IOException, GeneralSecurityException {
 
-        // TODO 从数据库里面读取pubKey列表，不为空则直接返回，为空则走父类的从authorized_keys文件解析的逻辑
+        // TODO 以username为查询条件从数据库里面读取pubKey列表，不为空则直接返回，为空则走父类的从authorized_keys文件解析的逻辑
         Collection<AuthorizedKeyEntry> entries = this.reloadAuthorizedKeysFromDb(username);
         if (entries != null && entries.size() > 0) {
             log.info("reloadAuthorizedKeys({})[{}] loaded {} keys from db",
@@ -51,7 +51,7 @@ public class JdbcAuthorizedKeysAuthenticator extends AuthorizedKeysAuthenticator
      * @throws IOException
      */
     private Collection<AuthorizedKeyEntry> reloadAuthorizedKeysFromDb(String username) throws IOException {
-        // TODO 从数据库里面读取pubKey字符串列表，并转换成AuthorizedKeyEntry列表
+        // TODO 以username为查询条件从数据库里面读取pubKey字符串列表，并转换成AuthorizedKeyEntry列表
         //  根据pubKey String构建AuthorizedKeyEntry对象的逻辑参考AuthorizedKeyEntry.readAuthorizedKeys(path)
         //  -> ... -> AuthorizedKeyEntry.parseAuthorizedKeyEntry(String, PublicKeyEntryDataResolver)
         Collection<String> pubKeyList = this.queryPubKeyStringList(username);
@@ -85,7 +85,7 @@ public class JdbcAuthorizedKeysAuthenticator extends AuthorizedKeysAuthenticator
     }
 
     /**
-     * 从DB中查询pubkey字符串列表
+     * 以username为查询条件从DB中查询pubkey字符串列表
      * @param username
      * @return
      */

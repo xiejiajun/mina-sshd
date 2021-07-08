@@ -116,6 +116,9 @@ public class AuthorizedKeysAuthenticator extends ModifiableFileWatcher implement
              */
             delegateHolder.set(RejectAllPublickeyAuthenticator.INSTANCE);
 
+            // TODO 如果要完全对齐Linux ssh公钥认证的化，这里的path应该要是username对应的用户home目录下的.ssh/authorized_keys
+            //  这里的DefaultAuthorizedKeysAuthenticator其实未完全和Linux系统的对齐，其使用的是启动SshServer的用户的user home
+            //  下的authorized_keys
             Path path = getPath();
             if (exists()) {
                 // TODO 从指定文件(authorized_keys)读取pubKey列表
