@@ -109,6 +109,9 @@ public class AuthorizedKeysAuthenticator extends ModifiableFileWatcher implement
 
     protected PublickeyAuthenticator resolvePublickeyAuthenticator(String username, ServerSession session)
             throws IOException, GeneralSecurityException {
+        // TODO checkReloadRequired方法决定是否重新加载authorized_keys文件：默认实现ModifiableFileWatcher.checkReloadRequired
+        //  是通过读取authorized_keys文件的最后一次修改时间和当前内存里面保存的修改时间进行对比，如果没变化就不重新读取，
+        //  改成JDBC实现后需要重写该方法或者直接重写resolvePublickeyAuthenticator方法
         if (checkReloadRequired()) {
             /*
              * Start fresh - NOTE: if there is any error then we want to reject all attempts since we don't want to

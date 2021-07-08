@@ -2,6 +2,8 @@ package org.apache.sshd.server.config.keys;
 
 import org.apache.sshd.common.config.keys.AuthorizedKeyEntry;
 import org.apache.sshd.common.util.GenericUtils;
+import org.apache.sshd.server.auth.pubkey.PublickeyAuthenticator;
+import org.apache.sshd.server.auth.pubkey.RejectAllPublickeyAuthenticator;
 import org.apache.sshd.server.session.ServerSession;
 
 import java.io.IOException;
@@ -37,20 +39,30 @@ public class JdbcAuthorizedKeysAuthenticator extends AuthorizedKeysAuthenticator
     }
 
     @Override
+    protected PublickeyAuthenticator resolvePublickeyAuthenticator(String username, ServerSession session)
+            throws IOException, GeneralSecurityException {
+        Collection<AuthorizedKeyEntry> entries = this.reloadAuthorizedKeys(null, username, session);
+        if (GenericUtils.size(entries) > 0) {
+            // TODO AuthorizedKeyEntriesPublickeyAuthenticator / RejectAllPublickeyAuthenticator
+            return PublickeyAuthenticator.fromAuthorizedEntries("jdbcAuthenticator", session, entries, getFallbackPublicKeyEntryResolver());
+        }
+        return RejectAllPublickeyAuthenticator.INSTANCE;
+    }
+
+    @Override
     protected Collection<AuthorizedKeyEntry> reloadAuthorizedKeys(
             Path path, String username, ServerSession session)
             throws IOException, GeneralSecurityException {
 
         // TODO 以username为查询条件从数据库里面读取pubKey列表，不为空则直接返回，为空则走父类的从authorized_keys文件解析的逻辑
         Collection<AuthorizedKeyEntry> entries = this.reloadAuthorizedKeysFromDb(username);
-        if (entries != null && entries.size() > 0) {
+        if (GenericUtils.size(entries) > 0) {
             log.info("reloadAuthorizedKeys({})[{}] loaded {} keys from db",
                     username, session, GenericUtils.size(entries));
             this.updateReloadAttributes();
             return entries;
         }
-
-        return super.reloadAuthorizedKeys(path, username, session);
+        return Collections.emptyList();
     }
 
     /**
@@ -64,7 +76,7 @@ public class JdbcAuthorizedKeysAuthenticator extends AuthorizedKeysAuthenticator
         //  根据pubKey String构建AuthorizedKeyEntry对象的逻辑参考AuthorizedKeyEntry.readAuthorizedKeys(path)
         //  -> ... -> AuthorizedKeyEntry.parseAuthorizedKeyEntry(String, PublicKeyEntryDataResolver)
         Collection<String> pubKeyList = this.queryPubKeyStringList(username);
-        if (pubKeyList == null || pubKeyList.size() <= 0) {
+        if (GenericUtils.size(pubKeyList) <= 0) {
             return Collections.emptyList();
         }
         // TODO 将pubKeyList转换成AuthorizedKeyEntry列表
