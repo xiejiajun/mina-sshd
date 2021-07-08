@@ -107,6 +107,8 @@ public class DefaultAuthorizedKeysAuthenticator extends AuthorizedKeysAuthentica
                 log.debug("reloadAuthorizedKeys({})[{}] check permissions of {}", username, session, path);
             }
 
+            // TODO 开启严格模式后authorized_keys文件的权限必须是600才会去读取，否则会被忽略
+            //  同样：ssh客户端也只会读取权限600的私钥文件
             Map.Entry<String, ?> violation = KeyUtils.validateStrictKeyFilePermissions(path);
             if (violation != null) {
                 log.warn("reloadAuthorizedKeys({})[{}] invalid file={} permissions: {}",
