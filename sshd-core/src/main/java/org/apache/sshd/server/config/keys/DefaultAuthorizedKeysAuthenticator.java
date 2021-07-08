@@ -92,6 +92,9 @@ public class DefaultAuthorizedKeysAuthenticator extends AuthorizedKeysAuthentica
         }
 
         String expected = getUsername();
+        // TODO 校验登陆的用户和当前启动服务的用户是否一致（言外之意DefaultAuthorizedKeysAuthenticator
+        //  只支持对启动SshServer的用户进行pubkey免密登陆，这也是为啥它通过getDefaultAuthorizedKeysFile()将
+        //  authorized_keys的path写死为当前启动服务的用户的home目录下的.ssh/authorized_keys的原因
         return username.equals(expected);
     }
 

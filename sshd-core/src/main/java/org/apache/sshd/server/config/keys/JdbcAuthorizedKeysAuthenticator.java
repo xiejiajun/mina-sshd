@@ -28,6 +28,15 @@ public class JdbcAuthorizedKeysAuthenticator extends AuthorizedKeysAuthenticator
     }
 
     @Override
+    protected boolean isValidUsername(String username, ServerSession session) {
+        // TODO 基于JDBC的密钥管理器只需要username不为空就支持公钥认证(父类的默认策略)，
+        //  因为拉取认证时的pubkey列表时会以username作为查询条件去拉取只属于username
+        //  工作空间的pubkey列表，这跟Linux的免密登陆行为可以对标，Linux用哪个用户登陆就是
+        //  就读取哪个用户的home目录下的.ssh/authorized_keys文件拉取公钥列表进行挨个匹配
+        return super.isValidUsername(username, session);
+    }
+
+    @Override
     protected Collection<AuthorizedKeyEntry> reloadAuthorizedKeys(
             Path path, String username, ServerSession session)
             throws IOException, GeneralSecurityException {
