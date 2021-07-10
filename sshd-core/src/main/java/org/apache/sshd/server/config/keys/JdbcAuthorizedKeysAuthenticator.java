@@ -66,8 +66,7 @@ public class JdbcAuthorizedKeysAuthenticator extends AuthorizedKeysAuthenticator
     }
 
     /**
-     * 当前系统用户，目前用不上
-     * @param username
+     * @param username : 登陆的用户名
      * @return
      * @throws IOException
      */
