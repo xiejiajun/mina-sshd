@@ -7,7 +7,6 @@ import org.apache.sshd.server.auth.pubkey.RejectAllPublickeyAuthenticator;
 import org.apache.sshd.server.session.ServerSession;
 
 import java.io.IOException;
-import java.io.StreamCorruptedException;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.security.GeneralSecurityException;
@@ -88,9 +87,9 @@ public class JdbcAuthorizedKeysAuthenticator extends AuthorizedKeysAuthenticator
                     continue; // null, empty or comment line
                 }
             } catch (RuntimeException | Error e) {
-                throw new StreamCorruptedException(
-                        "Failed (" + e.getClass().getSimpleName() + ")"
-                                + " to parse key entry=" + line + ": " + e.getMessage());
+                log.error("Failed ({}) to parse key entry={}: {}", e.getClass().getSimpleName(),
+                        line, e.getMessage());
+                continue;
             }
             if (entries == null) {
                 entries = new ArrayList<>();
